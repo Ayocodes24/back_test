@@ -26,15 +26,15 @@ io.on('connection', (socket) => {
   const chatSession = model.startChat({ history: [] });
 
   socket.on('chat message', async (data) => {
-    try {
-      const result = await chatSession.sendMessage(data);
-      const response = await result.response.text();
-      io.emit('chat message', { sender: "AI", text: response });
-    } catch (err) {
-      console.error("Gemini error:", err.message);
-      io.emit('chat message', { sender: "AI", text: "Sorry, I couldn't respond right now." });
-    }
-  });
+  try {
+    const result = await chatSession.sendMessage(String(data?.text || data)); // FIXED
+    const response = await result.response.text();
+    io.emit('chat message', { sender: "AI", text: response });
+  } catch (err) {
+    console.error("Gemini error:", err.message);
+    io.emit('chat message', { sender: "AI", text: "Sorry, I couldn't respond right now." });
+  }
+});
 
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
