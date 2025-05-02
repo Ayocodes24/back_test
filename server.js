@@ -18,7 +18,8 @@ const io = socketIo(server, {
 
 // Gemini Setup
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+const model = genAI.getGenerativeModel({ model: "gemini-pro-chat" });
+
 
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
