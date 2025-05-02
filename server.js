@@ -23,10 +23,12 @@ const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
+  const chatSession = model.startChat({ history: [] });
+
   socket.on('chat message', async (data) => {
     try {
-      const result = await model.generateContent(data);
-      const response = result.response.text();
+      const result = await chatSession.sendMessage(data);
+      const response = await result.response.text();
       io.emit('chat message', { sender: "AI", text: response });
     } catch (err) {
       console.error("Gemini error:", err.message);
